@@ -111,25 +111,33 @@ CREATE TABLE 'ProductType' (
     'TypeName'
 );
 
-CREATE TABLE 'Product' (
-    'ProductId' INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    'Name' TEXT NOT NULL,
-    'Price' TEXT NOT NULL,
-    'Description' TEXT NOT NULL,
-    'ProductTypeId' TEXT NOT NULL,
-    'CustomerId' INTEGER NOT NULL,
-        FOREIGN KEY('ProductTypeId') REFERENCES 'ProductType'('ProductTypeId'),
-        FOREIGN KEY('CustomerId') REFERENCES 'Customer'('CustomerId')
-);
+INSERT INTO ProductType VALUES (null, Workstation);
+INSERT INTO ProductType VALUES (null, ServicePlan);
+INSERT INTO ProductType VALUES (null, Parts);
 
 CREATE TABLE 'Customer' (
     'CustomerId' INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     'FirstName' TEXT NOT NULL,
     'LastName' TEXT NOT NULL,
-    'DateCreated' TEXT NOT NULL,
+    'DateCreated' DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
     'Active' BOOLEAN NOT NULL,
     'InactiveDate' TEXT NOT NULL
 );
+
+INSERT INTO Customer VALUES (null, 'Jim', 'Jensen', now, 1, 'nil');
+
+CREATE TABLE 'Product' (
+    'ProductId' INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    'Name' TEXT NOT NULL,
+    'Price' INTEGER NOT NULL,
+    'Description' TEXT NOT NULL,
+    'ProductTypeId' INTEGER NOT NULL,
+    'CustomerId' INTEGER NOT NULL,
+        FOREIGN KEY('ProductTypeId') REFERENCES 'ProductType'('ProductTypeId'),
+        FOREIGN KEY('CustomerId') REFERENCES 'Customer'('CustomerId')
+);
+
+INSERT INTO ProductType VALUES (null, PA9000, 9800, 'The Personal Assistant 9800 can help you with all of your everyday tasks. Just speak your commands and the PA9800 will complete all tasks while you focus on your day.', 1, 0);
 
 CREATE TABLE 'Orders' (
     'OrderId' INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
