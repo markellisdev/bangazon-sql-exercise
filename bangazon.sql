@@ -31,13 +31,20 @@ CREATE TABLE 'JobTitle' (
     'Title' TEXT NOT NULL
 );
 
+INSERT INTO JobTitle VALUES (null, 'Supervisor');
+INSERT INTO JobTitle VALUES (null, 'PersonalAssistant');
+
 CREATE TABLE 'Department' (
     'DepartmentId' INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     'Name' TEXT NOT NULL,
-    'Budget' TEXT NOT NULL,
-    'JobTitleId' INTEGER NOT NULL,
-        FOREIGN KEY('JobTitleId') REFERENCES 'JobTitle'('JobTitleId')
+    'Budget' TEXT NOT NULL
 );
+
+INSERT INTO Department VALUES (null, 'Sales', 200000);
+INSERT INTO Department VALUES (null, 'Marketing', 200000);
+INSERT INTO Department VALUES (null, 'ProductEngineering', 400000);
+INSERT INTO Department VALUES (null, 'Operations', 300000);
+INSERT INTO Department VALUES (null, 'Support', 100000);
 
 
 CREATE TABLE 'Employee' (
@@ -50,6 +57,12 @@ CREATE TABLE 'Employee' (
         FOREIGN KEY('DepartmentId') REFERENCES 'Department'('DepartmentId'),
         FOREIGN KEY('JobTitleId') REFERENCES 'JobTitle'('JobTitleId')
 );
+
+INSERT INTO Employee VALUES (null, 'Jami', 'Jackson', 'MarketingDirector', 2, 1);
+INSERT INTO Employee VALUES (null, 'Wim', 'Hof', 'HRDirector', 4, 1);
+INSERT INTO Employee VALUES (null, 'Steve', 'Brownlee', 'SoftwareEngineer', 3, 1);
+INSERT INTO Employee VALUES (null, 'Mary', 'Woodson', 'PersonalAssistant', 4, 2);
+
 
 CREATE TABLE 'TrainingProgram' (
     'TrainingProgramId' INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
@@ -71,19 +84,27 @@ CREATE TABLE 'Computer' (
     'ComputerId' INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     'CommisionedDate' TEXT NOT NULL,
     'DecommisionedDate' TEXT NOT NULL,
-    'InCommision' BOOLEAN NOT NUll,
-    'OperatingSystemId' TEXT NOT NULL,
+    'InCommision' BOOLEAN NOT NULL,
+    'OperatingSystemId' INTEGER NOT NULL,
     'EmployeeId' INTEGER NOT NULL,
-    'DepartmentId' INTEGER NOT NUll,
+    'DepartmentId' INTEGER NOT NULL,
         FOREIGN KEY('OperatingSystemId') REFERENCES 'OperatingSystem'('OperatingSystemId'),
         FOREIGN KEY('EmployeeId') REFERENCES 'Employee'('EmployeeId'),
         FOREIGN KEY('DepartmentId') REFERENCES 'Department'('DepartmentId')
 );
 
+INSERT INTO Computer VALUES (null, '20170101', 'nil', 1, 1, 1, 2);
+INSERT INTO Computer VALUES (null, '20170102', 'nil', 1, 2, 2, 4);
+INSERT INTO Computer VALUES (null, '20170103', 'nil', 1, 2, 3, 3);
+
 CREATE TABLE 'OperatingSystem' (
     'OperatingSystemId' INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     'Name' TEXT NOT NULL
 );
+
+INSERT INTO OperatingSystem VALUES (null, 'Windows');
+INSERT INTO OperatingSystem VALUES (null, 'MacOS');
+INSERT INTO OperatingSystem VALUES (null, 'Linux');
 
 CREATE TABLE 'ProductType' (
     'ProductTypeId' INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
