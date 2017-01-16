@@ -1,16 +1,17 @@
-DELETE FROM EmployeeInTraining;
-DELETE FROM TrainingProgram;
-DELETE FROM Employee;
-DELETE FROM Department;
-DELETE FROM JobTitle;
-DELETE FROM OperatingSystem;
-DELETE FROM Computer;
-DELETE FROM PaymentTypes;
 DELETE FROM OrdersByProduct;
+DELETE FROM Product;
 DELETE FROM Orders;
 DELETE FROM Customer;
+DELETE FROM Computer;
+DELETE FROM EmployeeInTraining;
+DELETE FROM Employee;
+DELETE FROM PaymentType;
 DELETE FROM ProductType;
-DELETE FROM Product;
+DELETE FROM OperatingSystem;
+DELETE FROM TrainingProgram;
+DELETE FROM JobTitle;
+DELETE FROM Department;
+
 
 DROP TABLE IF EXISTS EmployeeInTraining;
 DROP TABLE IF EXISTS TrainingProgram;
@@ -19,7 +20,7 @@ DROP TABLE IF EXISTS Department;
 DROP TABLE IF EXISTS JobTitle;
 DROP TABLE IF EXISTS OperatingSystem;
 DROP TABLE IF EXISTS Computer;
-DROP TABLE IF EXISTS PaymentTypes;
+DROP TABLE IF EXISTS PaymentType;
 DROP TABLE IF EXISTS OrdersByProduct;
 DROP TABLE IF EXISTS Orders;
 DROP TABLE IF EXISTS Customer;
@@ -31,21 +32,11 @@ CREATE TABLE 'JobTitle' (
     'Title' TEXT NOT NULL
 );
 
-INSERT INTO JobTitle VALUES (null, 'Supervisor');
-INSERT INTO JobTitle VALUES (null, 'PersonalAssistant');
-
 CREATE TABLE 'Department' (
     'DepartmentId' INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     'Name' TEXT NOT NULL,
     'Budget' TEXT NOT NULL
 );
-
-INSERT INTO Department VALUES (null, 'Sales', 200000);
-INSERT INTO Department VALUES (null, 'Marketing', 200000);
-INSERT INTO Department VALUES (null, 'ProductEngineering', 400000);
-INSERT INTO Department VALUES (null, 'Operations', 300000);
-INSERT INTO Department VALUES (null, 'Support', 100000);
-
 
 CREATE TABLE 'Employee' (
     'EmployeeId' INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
@@ -57,12 +48,6 @@ CREATE TABLE 'Employee' (
         FOREIGN KEY('DepartmentId') REFERENCES 'Department'('DepartmentId'),
         FOREIGN KEY('JobTitleId') REFERENCES 'JobTitle'('JobTitleId')
 );
-
-INSERT INTO Employee VALUES (null, 'Jami', 'Jackson', 'MarketingDirector', 2, 1);
-INSERT INTO Employee VALUES (null, 'Wim', 'Hof', 'HRDirector', 4, 1);
-INSERT INTO Employee VALUES (null, 'Steve', 'Brownlee', 'SoftwareEngineer', 3, 1);
-INSERT INTO Employee VALUES (null, 'Mary', 'Woodson', 'PersonalAssistant', 4, 2);
-
 
 CREATE TABLE 'TrainingProgram' (
     'TrainingProgramId' INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
@@ -93,33 +78,15 @@ CREATE TABLE 'Computer' (
         FOREIGN KEY('DepartmentId') REFERENCES 'Department'('DepartmentId')
 );
 
--- Original insert where date format is not correct
--- INSERT INTO Computer VALUES (null, '20170101', 'nil', 1, 1, 1, 2);
--- INSERT INTO Computer VALUES (null, '20170102', 'nil', 1, 2, 2, 4);
--- INSERT INTO Computer VALUES (null, '20170103', 'nil', 1, 2, 3, 3);
-
--- Used the following update after putting date values in without proper format xxxx-xx-xx(year, month, day)
-INSERT OR REPLACE INTO Computer VALUES (1, '2017-01-01', 'nil', 1, 1, 1, 2);
-INSERT OR REPLACE INTO Computer VALUES (2, '2017-01-02', 'nil', 1, 2, 2, 4);
-INSERT OR REPLACE INTO Computer VALUES (3, '2017-01-03', 'nil', 1, 2, 3, 3);
-
 CREATE TABLE 'OperatingSystem' (
     'OperatingSystemId' INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     'Name' TEXT NOT NULL
 );
 
-INSERT INTO OperatingSystem VALUES (null, 'Windows');
-INSERT INTO OperatingSystem VALUES (null, 'MacOS');
-INSERT INTO OperatingSystem VALUES (null, 'Linux');
-
 CREATE TABLE 'ProductType' (
     'ProductTypeId' INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     'TypeName'
 );
-
-INSERT INTO ProductType VALUES (null, 'Workstation');
-INSERT INTO ProductType VALUES (null, 'ServicePlan');
-INSERT INTO ProductType VALUES (null, 'Parts');
 
 CREATE TABLE 'Customer' (
     'CustomerId' INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
@@ -129,10 +96,6 @@ CREATE TABLE 'Customer' (
     'Active' BOOLEAN NOT NULL,
     'InactiveDate' TEXT NOT NULL
 );
-
-INSERT INTO Customer VALUES (null, 'Jim', 'Jensen', now, 1, 'nil');
-INSERT OR REPLACE INTO Customer VALUES (2, 'Mary', 'Swanson', CURRENT_TIMESTAMP, 1, 'nil');
-INSERT OR REPLACE INTO Customer VALUES (3, 'Fred', 'Gamble', CURRENT_TIMESTAMP, 1, 'nil');
 
 CREATE TABLE 'Product' (
     'ProductId' INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
@@ -145,10 +108,6 @@ CREATE TABLE 'Product' (
         FOREIGN KEY('CustomerId') REFERENCES 'Customer'('CustomerId')
 );
 
-INSERT INTO ProductType VALUES (null, PA9000, 9800, 'The Personal Assistant 9800 can help you with all of your everyday tasks. Just speak your commands and the PA9800 will complete all tasks while you focus on your day.', 1, 0);
-INSERT INTO ProductType VALUES (null, TN500, 800, 'This workstation was designed to help TN road construction. It is designed to stand motionless holding a shovel while watching others work.', 1, 0);
-INSERT INTO ProductType VALUES (null, TN500, 800, 'This workstation was designed to help TN road construction. It is designed to stand motionless holding a shovel while watching others work.', 1, 0);
-
 CREATE TABLE 'Orders' (
     'OrderId' INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     'CustomerId' INTEGER NOT NULL,
@@ -159,13 +118,75 @@ CREATE TABLE 'OrdersByProduct' (
     'OrdersByProductId' INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     'OrderId' INTEGER NOT NULL,
     'ProductId' INTEGER NOT NULL,
+    'PaymentTypeId' INTEGER NOT NULL,
         FOREIGN KEY('OrderId') REFERENCES 'Orders'('OrderId'),
-        FOREIGN KEY('ProductId') REFERENCES 'Product' ('ProductId')
+        FOREIGN KEY('ProductId') REFERENCES 'Product' ('ProductId'),
+        FOREIGN KEY('PaymentTypeId') REFERENCES 'PaymentType'('PaymentTypeId')
 );
 
-CREATE TABLE 'PaymentTypes' (
-    'PaymentTypesId' INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    'TypeName' TEXT NOT NULL,
-    'OrderId' INTEGER NOT NULL,
-        FOREIGN KEY('OrderId') REFERENCES 'Orders'('OrderId')
+CREATE TABLE 'PaymentType' (
+    'PaymentTypeId' INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    'TypeName' TEXT NOT NULL
 );
+
+INSERT INTO PaymentType VALUES (null, 'CreditCard');
+INSERT INTO PaymentType VALUES (null, 'Check');
+INSERT INTO PaymentType VALUES (null, 'Cash');
+
+
+INSERT INTO JobTitle VALUES (null, 'Supervisor');
+INSERT INTO JobTitle VALUES (null, 'PersonalAssistant');
+
+INSERT INTO Department VALUES (null, 'Sales', 200000);
+INSERT INTO Department VALUES (null, 'Marketing', 200000);
+INSERT INTO Department VALUES (null, 'ProductEngineering', 400000);
+INSERT INTO Department VALUES (null, 'Operations', 300000);
+INSERT INTO Department VALUES (null, 'Support', 100000);
+
+INSERT INTO Employee VALUES (null, 'Jami', 'Jackson', 'MarketingDirector', 2, 1);
+INSERT INTO Employee VALUES (null, 'Wim', 'Hof', 'HRDirector', 4, 1);
+INSERT INTO Employee VALUES (null, 'Steve', 'Brownlee', 'SoftwareEngineer', 3, 1);
+INSERT INTO Employee VALUES (null, 'Mary', 'Woodson', 'PersonalAssistant', 4, 2);
+
+INSERT INTO OperatingSystem VALUES (null, 'Windows');
+INSERT INTO OperatingSystem VALUES (null, 'MacOS');
+INSERT INTO OperatingSystem VALUES (null, 'Linux');
+
+-- Original insert where date format is not correct
+-- INSERT INTO Computer VALUES (null, '20170101', 'nil', 1, 1, 1, 2);
+-- INSERT INTO Computer VALUES (null, '20170102', 'nil', 1, 2, 2, 4);
+-- INSERT INTO Computer VALUES (null, '20170103', 'nil', 1, 2, 3, 3);
+
+-- Used the following update after putting date values in without proper format xxxx-xx-xx(year, month, day)
+INSERT OR REPLACE INTO Computer VALUES (1, '2017-01-01', 'nil', 1, 1, 1, 2);
+INSERT OR REPLACE INTO Computer VALUES (2, '2017-01-02', 'nil', 1, 2, 2, 4);
+INSERT OR REPLACE INTO Computer VALUES (3, '2017-01-03', 'nil', 1, 2, 3, 3);
+
+INSERT INTO ProductType VALUES (null, 'Clothing');
+INSERT INTO ProductType VALUES (null, 'Electronics');
+INSERT INTO ProductType VALUES (null, 'HealthAndPersonalCare');
+INSERT INTO ProductType VALUES (null, 'Jewelry');
+INSERT INTO ProductType VALUES (null, 'Automotive');
+
+INSERT INTO Customer VALUES (null, 'Jim', 'Jensen', '2017-01-03', 1, 'nil');
+INSERT OR REPLACE INTO Customer VALUES (2, 'Mary', 'Swanson', CURRENT_TIMESTAMP, 1, 'nil');
+INSERT OR REPLACE INTO Customer VALUES (3, 'Fred', 'Gamble', '2017-01-01', 1, 'nil');
+INSERT INTO Customer VALUES (null, 'Tim', 'Lewis', 2016-01-01, 0, CURRENT_TIMESTAMP);
+
+INSERT INTO Product VALUES (null, 'PA9000', 980, 'The Personal Assistant 9000 can help you with all of your everyday tasks. Just speak your commands and the PA9000 will complete all tasks while you focus on your day.', 2, 2);
+INSERT INTO Product VALUES (null, 'PeppermintSoap', 12, 'This peppermint soap was handmade in our Vermont home with only natural ingredients and essential oils.', 3, 1);
+INSERT INTO Product VALUES (null, 'TMNTShirt', 19, 'This teenage mutant ninja turtles shirt is just what your child has been looking for.', 1, 1);
+INSERT INTO Product VALUES (null, 'TeaTreeOilToothpaste', 9, 'This Tea Tree Oil toothpaste is handmade with love and care.', 3, 1);
+INSERT INTO Product VALUES (null, 'CharmBracelet', 29, 'Beautiful charm bracelet with one owl charm. Other charms sold separately', 4, 3);
+INSERT INTO Product VALUES (null, 'WheelBrushSet', 16, 'This set of 3 wheel brushes will help keep your wheels and tires looking new', 5, 1);
+
+INSERT INTO Orders VALUES (null, 2);
+INSERT INTO Orders VALUES (null, 3);
+INSERT INTO Orders VALUES (null, 1);
+
+INSERT INTO OrdersByProduct VALUES (null, 2, 3, 3);
+INSERT INTO OrdersByProduct VALUES (null, 2, 6, 3);
+INSERT INTO OrdersByProduct VALUES (null, 1, 5, 1);
+INSERT INTO OrdersByProduct VALUES (null, 1, 4, 1);
+INSERT INTO OrdersByProduct VALUES (null, 1, 2, 1);
+INSERT INTO OrdersByProduct VALUES (null, 3, 1, 2);
