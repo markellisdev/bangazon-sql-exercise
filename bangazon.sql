@@ -93,9 +93,15 @@ CREATE TABLE 'Computer' (
         FOREIGN KEY('DepartmentId') REFERENCES 'Department'('DepartmentId')
 );
 
-INSERT INTO Computer VALUES (null, '20170101', 'nil', 1, 1, 1, 2);
-INSERT INTO Computer VALUES (null, '20170102', 'nil', 1, 2, 2, 4);
-INSERT INTO Computer VALUES (null, '20170103', 'nil', 1, 2, 3, 3);
+-- Original insert where date format is not correct
+-- INSERT INTO Computer VALUES (null, '20170101', 'nil', 1, 1, 1, 2);
+-- INSERT INTO Computer VALUES (null, '20170102', 'nil', 1, 2, 2, 4);
+-- INSERT INTO Computer VALUES (null, '20170103', 'nil', 1, 2, 3, 3);
+
+-- Used the following update after putting date values in without proper format xxxx-xx-xx(year, month, day)
+INSERT OR REPLACE INTO Computer VALUES (1, '2017-01-01', 'nil', 1, 1, 1, 2);
+INSERT OR REPLACE INTO Computer VALUES (2, '2017-01-02', 'nil', 1, 2, 2, 4);
+INSERT OR REPLACE INTO Computer VALUES (3, '2017-01-03', 'nil', 1, 2, 3, 3);
 
 CREATE TABLE 'OperatingSystem' (
     'OperatingSystemId' INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
@@ -111,9 +117,9 @@ CREATE TABLE 'ProductType' (
     'TypeName'
 );
 
-INSERT INTO ProductType VALUES (null, Workstation);
-INSERT INTO ProductType VALUES (null, ServicePlan);
-INSERT INTO ProductType VALUES (null, Parts);
+INSERT INTO ProductType VALUES (null, 'Workstation');
+INSERT INTO ProductType VALUES (null, 'ServicePlan');
+INSERT INTO ProductType VALUES (null, 'Parts');
 
 CREATE TABLE 'Customer' (
     'CustomerId' INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
@@ -125,6 +131,8 @@ CREATE TABLE 'Customer' (
 );
 
 INSERT INTO Customer VALUES (null, 'Jim', 'Jensen', now, 1, 'nil');
+INSERT OR REPLACE INTO Customer VALUES (2, 'Mary', 'Swanson', CURRENT_TIMESTAMP, 1, 'nil');
+INSERT OR REPLACE INTO Customer VALUES (3, 'Fred', 'Gamble', CURRENT_TIMESTAMP, 1, 'nil');
 
 CREATE TABLE 'Product' (
     'ProductId' INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
@@ -138,6 +146,8 @@ CREATE TABLE 'Product' (
 );
 
 INSERT INTO ProductType VALUES (null, PA9000, 9800, 'The Personal Assistant 9800 can help you with all of your everyday tasks. Just speak your commands and the PA9800 will complete all tasks while you focus on your day.', 1, 0);
+INSERT INTO ProductType VALUES (null, TN500, 800, 'This workstation was designed to help TN road construction. It is designed to stand motionless holding a shovel while watching others work.', 1, 0);
+INSERT INTO ProductType VALUES (null, TN500, 800, 'This workstation was designed to help TN road construction. It is designed to stand motionless holding a shovel while watching others work.', 1, 0);
 
 CREATE TABLE 'Orders' (
     'OrderId' INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
